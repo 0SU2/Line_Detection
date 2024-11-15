@@ -10,10 +10,10 @@ class Line:
     """
     def __init__(self, x1, y1, x2, y2):
 
-        self.x1 = np.float32(x1)
-        self.y1 = np.float32(y1)
-        self.x2 = np.float32(x2)
-        self.y2 = np.float32(y2)
+        self.x1 = np.int32(x1)
+        self.y1 = np.int32(y1)
+        self.x2 = np.int32(x2)
+        self.y2 = np.int32(y2)
 
         self.slope = self.compute_slope()
         self.bias = self.compute_bias()
