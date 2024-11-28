@@ -2,7 +2,6 @@ import numpy as np
 import cv2
 from Line import Line
 
-
 def region_of_interest(img, vertices):
     """
     Applies an image mask.
