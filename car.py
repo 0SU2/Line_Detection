@@ -1,5 +1,38 @@
 import cv2
 import time
+from ultralytics import YOLO
+
+def load_yolo_model(model_path):
+    #Cargar el modelo YOLO
+    return YOLO(model_path)
+
+def detect_traffic_signs(frame, model):
+    #Realiza la deteccion en el cuadro
+    results = model.predict(frame)
+    #Lista para almacenar las detecciones
+    detections = []
+
+    #Itera sobre las detecciones del primer resultado(imagen actual)
+    for box in results[0].boxes:
+        #Obtiene las coordenadas de la caja y la clase detectada
+        xyxy = box.xyxy[0].cpu().numpy() #Coordenadas de la caja
+        cls = int(box.cls[0].cpu().numpy()) #Clase del objeto
+        conf = float(box.conf[0].cpu().numpy()) #Confianza de la deteccion
+
+        detections.append((xyxy, cls, conf))
+
+
+    return detections
+
+def draw_detections(frame, detections, class_names):
+    for detection in detections:
+        xyxy, cls, conf = detection
+        x1, y1, x2, y2 = map(int, xyxy) #Convierte coordenadas a enteros
+        label = f"{class_names[cls]} {conf:.2f}"
+
+        #Dibuja la caja y la etiqueta en el frame
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        cv2.putText(frame, label, (x1, y1 -10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
 # Load the Haar cascade classifier
 def load_cascade(cascade_file):
