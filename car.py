@@ -21,18 +21,30 @@ def detect_traffic_signs(frame, model):
 
         detections.append((xyxy, cls, conf))
 
-
     return detections
+
+def draw_detections_cars(frame, detections, class_names):
+    for detection in detections:
+        xyxy, cls, conf = detection
+        if cls == 2:
+            if conf > 0.54:
+                x1, y1, x2, y2 = map(int, xyxy) #Convierte coordenadas a enteros
+                label = f"{class_names} {conf:.2f}"
+
+                #Dibuja la caja y la etiqueta en el frame
+                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                cv2.putText(frame, label, (x1, y1 -10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
 def draw_detections(frame, detections, class_names):
     for detection in detections:
         xyxy, cls, conf = detection
-        x1, y1, x2, y2 = map(int, xyxy) #Convierte coordenadas a enteros
-        label = f"{class_names[cls]} {conf:.2f}"
+        if conf > 0.20:
+            x1, y1, x2, y2 = map(int, xyxy) #Convierte coordenadas a enteros
+            label = f"{class_names[cls]} {conf:.2f}"
 
-        #Dibuja la caja y la etiqueta en el frame
-        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        cv2.putText(frame, label, (x1, y1 -10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            #Dibuja la caja y la etiqueta en el frame
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            cv2.putText(frame, label, (x1, y1 -10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
 # Load the Haar cascade classifier
 def load_cascade(cascade_file):
